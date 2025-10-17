@@ -1,0 +1,6 @@
+<BuildStream: void simpleStreamBuilder()>/r13 -> (1)objs: NewObj{<BuildStream: void simpleStreamBuilder()>[0@L28] new E}
+<BuildStream: void simpleStreamBuilder()>/r16 -> (1)objs: NewObj{<BuildStream: void simpleStreamBuilder()>[11@L36] new E}
+<BuildStream: void delegateStreamBuilder()>/r6 -> (1)objs: NewObj{<BuildStream: void delegateStreamBuilder()>[0@L49] new E}
+<BuildStream: void delegateStreamBuilder()>/r9 -> (1)objs: NewObj{<BuildStream: void delegateStreamBuilder()>[3@L50] new E}
+<BuildStream: void streamConcat()>/r12 -> (1)objs: NewObj{<BuildStream: void streamConcat()>[0@L64] new E}
+<BuildStream: void streamConcat()>/r15 -> (1)objs: NewObj{<BuildStream: void streamConcat()>[4@L66] new E}

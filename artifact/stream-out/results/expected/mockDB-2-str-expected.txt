@@ -1,0 +1,6 @@
+<benchmarks.App2_Str: void perform_task7(db.DB)>/r8 -> (1)objs: ConstantObj{java.lang.String: "N"}
+<benchmarks.App2_Str: void perform_task8(db.DB)>/r8 -> (1)objs: ConstantObj{java.lang.String: "O"}
+<benchmarks.App2_Str: void perform_task9(db.DB)>/r8 -> (1)objs: NewObj{<sun.misc.FloatingDecimal$BinaryToASCIIBuffer: java.lang.String toJavaFormatString()>[2@L302] new java.lang.String}
+<benchmarks.App2_Str: void perform_task10(db.DB)>/$r2 -> (1)objs: NewObj{<java.lang.StringBuilder: java.lang.String toString()>[0@L407] new java.lang.String}
+<benchmarks.App2_Str: void perform_task11(db.DB)>/r8 -> (7)objs: ConstantObj{java.lang.String: "AIR"} |,| ConstantObj{java.lang.String: "FOB"} |,| ConstantObj{java.lang.String: "MAIL"} |,| ConstantObj{java.lang.String: "RAIL"} |,| ConstantObj{java.lang.String: "REG AIR"} |,| ConstantObj{java.lang.String: "SHIP"} |,| ConstantObj{java.lang.String: "TRUCK"}
+<benchmarks.App2_Str: void perform_task12(db.DB)>/$r2 -> (1)objs: ConstantObj{java.lang.String: "N"}

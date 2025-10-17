@@ -1,0 +1,10 @@
+# macOS hidden file
+.DS_Store
+source/.gradle/
+source/.idea/
+*-pta-expected.txt
+source/bin/
+source/build/
+source/cache/
+source/out/
+source/output/

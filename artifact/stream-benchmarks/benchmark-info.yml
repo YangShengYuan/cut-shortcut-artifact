@@ -1,0 +1,125 @@
+# a simple example to demonstrate how selective context sensitivity fails
+- id: very-simple-stm
+  main: stream.VerySimpleStream
+  apps: [ synthetic/very-simple-stm.jar ]
+
+# synthetic micro-benchmarks
+- id: simple-struc
+  main: SimpleStreamStruc
+  apps: [ synthetic/simple-struc.jar ]
+
+- id: build-stm
+  main: BuildStream
+  apps: [ synthetic/build-stm.jar ]
+
+- id: simple-func
+  main: SimpleStreamFunc
+  apps: [ synthetic/simple-func.jar ]
+
+- id: simple-func-obj
+  main: SimpleStreamFuncObj
+  apps: [ synthetic/simple-func-obj.jar ]
+
+- id: func-motivating # need to distinguish string constants
+  main: FuncMotivating
+  apps: [ synthetic/func-motivating.jar ]
+
+- id: stm-map
+  main: StreamMap
+  apps: [ synthetic/stm-map.jar ]
+
+- id: stm-flatMap
+  main: StreamFlatMap
+  apps: [ synthetic/stm-flatMap.jar ]
+
+- id: stm-reduce
+  main: StreamReduce
+  apps: [ synthetic/stm-reduce.jar ]
+
+- id: stm-collect
+  main: StreamCollect
+  apps: [ synthetic/stm-collect.jar ]
+
+- id: stm-coll-interact
+  main: StreamCollInteract
+  apps: [ synthetic/stm-coll-interact.jar ]
+
+- id: primitive-stm
+  main: PrimitiveStream
+  apps: [ synthetic/primitive-stm.jar ]
+
+- id: conserv-stm
+  main: ConservStream
+  apps: [ synthetic/conserv-stm.jar ]
+
+# mockDB-query micro-benchmarks
+- id: mockDB-1
+  main: benchmarks.App1
+  apps: [ mockDB/mockDB-1.jar ]
+
+- id: mockDB-1-str # need to distinguish string constants
+  main: benchmarks.App1_Str
+  apps: [ mockDB/mockDB-1-str.jar ]
+
+- id: mockDB-2
+  main: benchmarks.App2
+  apps: [ mockDB/mockDB-2.jar ]
+
+- id: mockDB-2-str # need to distinguish string constants
+  main: benchmarks.App2_Str
+  apps: [ mockDB/mockDB-2-str.jar ]
+
+- id: mockDB-3
+  main: benchmarks.App3
+  apps: [ mockDB/mockDB-3.jar ]
+
+- id: mockDB-3-str # need to distinguish string constants
+  main: benchmarks.App3_Str
+  apps: [ mockDB/mockDB-3-str.jar ]
+
+- id: mockDB-4
+  main: benchmarks.App4
+  apps: [ mockDB/mockDB-4.jar ]
+
+- id: mockDB-4-str # need to distinguish string constants
+  main: benchmarks.App4_Str
+  apps: [ mockDB/mockDB-4-str.jar ]
+
+- id: mockDB-5
+  main: benchmarks.App5
+  apps: [ mockDB/mockDB-5.jar ]
+
+- id: mockDB-5-str # need to distinguish string constants
+  main: benchmarks.App5_Str
+  apps: [ mockDB/mockDB-5-str.jar ]
+
+# programs, all in java-8,
+# for renaissance, set {distinguish-string-constants} = all
+# for others, set distinguish-string-constants} = reflection
+- id: renai-stm
+  main: LauncherM
+  apps: [ program/renaissance-M.jar ]
+
+- id: j8-tutorial
+  main: com.winterbe.java8.samples.TestAll
+  apps: [ program/j8-tutorial.jar ]
+
+- id: ws4j
+  main: edu.uniba.di.lacam.kdde.ws4j.TestAll
+  apps: [ program/ws4j.jar ]
+
+- id: rstreamer
+  main: com.github.ikhoury.rstreamer.TestAll
+  apps: [ program/rstreamer.jar ]
+
+- id: amazon-sqs
+  main: TestAll
+  apps: [ program/amazon-sqs.jar ]
+
+- id: jbayes
+  main: com.github.vangj.jbayes.inf.TestAll
+  apps: [ program/jbayes.jar ]
+
+- id: finmath
+  main: net.finmath.TestAll
+  apps: [ program/finmath.jar ]

@@ -1,0 +1,6 @@
+<SimpleStreamStruc: void delegateSingleElementStream()>/r6 -> (1)objs: NewObj{<SimpleStreamStruc: void delegateSingleElementStream()>[0@L29] new E}
+<SimpleStreamStruc: void delegateSingleElementStream()>/r10 -> (1)objs: NewObj{<SimpleStreamStruc: void delegateSingleElementStream()>[2@L30] new E}
+<SimpleStreamStruc: void multiElementStreamSimple()>/r16 -> (1)objs: NewObj{<SimpleStreamStruc: void multiElementStreamSimple()>[2@L43] new E}
+<SimpleStreamStruc: void multiElementStreamSimple()>/r19 -> (1)objs: NewObj{<SimpleStreamStruc: void multiElementStreamSimple()>[4@L44] new E}
+<SimpleStreamStruc: void multiElementStreamComplex()>/r20 -> (1)objs: NewObj{<SimpleStreamStruc: void multiElementStreamComplex()>[0@L56] new W}
+<SimpleStreamStruc: void multiElementStreamComplex()>/r31 -> (1)objs: NewObj{<SimpleStreamStruc: void multiElementStreamComplex()>[16@L62] new W}

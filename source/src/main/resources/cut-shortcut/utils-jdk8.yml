@@ -1,0 +1,129 @@
+########################################################################
+#  config of util classes for container access pattern
+#  of cut-shortcut (valid for jdk 1.8)
+########################################################################
+# config format for one class is as follows:
+# - util-class:    util class name
+#   private-class: class that should not generate host on new (instead, generated when allocsig being called)
+#   util-batch-en: batch entrance defined in util class
+#   util-entrance: entrance defined in util class
+#   util-transfer: transfer defined in util class
+#   reentrancy:    call to entrance in util methods that shouldn't be handled when invoked
+
+- util-class:    java.util.Collections
+  private-class: [# collection class
+                  {cont: java.util.Collections$UnmodifiableCollection, allocsig: ["java.util.Collection unmodifiableCollection(java.util.Collection)"]},
+                  {cont: java.util.Collections$UnmodifiableSet, allocsig: ["java.util.Set unmodifiableSet(java.util.Set)"]},
+                  {cont: java.util.Collections$UnmodifiableSortedSet, allocsig: ["java.util.SortedSet unmodifiableSortedSet(java.util.SortedSet)"]},
+                  {cont: java.util.Collections$UnmodifiableNavigableSet, allocsig: ["java.util.NavigableSet unmodifiableNavigableSet(java.util.NavigableSet)"]},
+                  {cont: java.util.Collections$UnmodifiableList, allocsig: ["java.util.List unmodifiableList(java.util.List)"]},
+                  {cont: java.util.Collections$UnmodifiableRandomAccessList, allocsig: ["java.util.List unmodifiableList(java.util.List)"]},
+                  {cont: java.util.Collections$SynchronizedCollection, allocsig: ["java.util.Collection synchronizedCollection(java.util.Collection)", "java.util.Collection synchronizedCollection(java.util.Collection,java.lang.Object)"]},
+                  {cont: java.util.Collections$SynchronizedSet, allocsig: ["java.util.Set synchronizedSet(java.util.Set)", "java.util.Set synchronizedSet(java.util.Set,java.lang.Object)"]},
+                  {cont: java.util.Collections$SynchronizedSortedSet, allocsig: ["java.util.SortedSet synchronizedSortedSet(java.util.SortedSet)"]},
+                  {cont: java.util.Collections$SynchronizedNavigableSet, allocsig: ["java.util.NavigableSet synchronizedNavigableSet(java.util.NavigableSet)"]},
+                  {cont: java.util.Collections$SynchronizedList, allocsig: ["java.util.List synchronizedList(java.util.List)", "java.util.List synchronizedList(java.util.List,java.lang.Object)"]},
+                  {cont: java.util.Collections$SynchronizedRandomAccessList, allocsig: ["java.util.List synchronizedList(java.util.List)", "java.util.List synchronizedList(java.util.List,java.lang.Object)"]},
+                  {cont: java.util.Collections$CheckedCollection, allocsig: ["java.util.Collection checkedCollection(java.util.Collection,java.lang.Class)"]},
+                  {cont: java.util.Collections$CheckedQueue, allocsig: ["java.util.Queue checkedQueue(java.util.Queue,java.lang.Class)"]},
+                  {cont: java.util.Collections$CheckedSet, allocsig: ["java.util.Set checkedSet(java.util.Set,java.lang.Class)"]},
+                  {cont: java.util.Collections$CheckedSortedSet, allocsig: ["java.util.SortedSet checkedSortedSet(java.util.SortedSet,java.lang.Class)"]},
+                  {cont: java.util.Collections$CheckedNavigableSet, allocsig: ["java.util.NavigableSet checkedNavigableSet(java.util.NavigableSet,java.lang.Class)"]},
+                  {cont: java.util.Collections$CheckedList, allocsig: ["java.util.List checkedList(java.util.List,java.lang.Class)"]},
+                  {cont: java.util.Collections$CheckedRandomAccessList, allocsig: ["java.util.List checkedList(java.util.List,java.lang.Class)"]},
+                  {cont: java.util.Collections$EmptySet, allocsig: ["java.util.Set emptySet()"]},
+                  {cont: java.util.Collections$EmptyList, allocsig: ["java.util.List emptyList()"]},
+                  {cont: java.util.Collections$SingletonSet, allocsig: ["java.util.Set singleton(java.lang.Object)"]},
+                  {cont: java.util.Collections$SingletonList, allocsig: ["java.util.List singletonList(java.lang.Object)"]},
+                  {cont: java.util.Collections$CopiesList, allocsig: ["java.util.List nCopies(int,java.lang.Object)"]},
+                  {cont: java.util.Collections$AsLIFOQueue, allocsig: ["java.util.Queue asLifoQueue(java.util.Deque)"]},
+                  {cont: java.util.Collections$1, allocsig: ["java.util.Iterator singletonIterator(java.lang.Object)"]},
+                  {cont: java.util.Collections$2, allocsig: ["java.util.Spliterator singletonSpliterator(java.lang.Object)"]},
+                  # map class
+                  {cont: java.util.Collections$UnmodifiableMap, allocsig: ["java.util.Map unmodifiableMap(java.util.Map)"]},
+                  {cont: java.util.Collections$UnmodifiableSortedMap, allocsig: ["java.util.SortedMap unmodifiableSortedMap(java.util.SortedMap)"]},
+                  {cont: java.util.Collections$UnmodifiableNavigableMap, allocsig: ["java.util.NavigableMap unmodifiableNavigableMap(java.util.NavigableMap)"]},
+                  {cont: java.util.Collections$SynchronizedMap, allocsig: ["java.util.Map synchronizedMap(java.util.Map)"]},
+                  {cont: java.util.Collections$SynchronizedSortedMap, allocsig: ["java.util.SortedMap synchronizedSortedMap(java.util.SortedMap)"]},
+                  {cont: java.util.Collections$SynchronizedNavigableMap, allocsig: ["java.util.NavigableMap synchronizedNavigableMap(java.util.NavigableMap)"]},
+                  {cont: java.util.Collections$CheckedMap, allocsig: ["java.util.Map checkedMap(java.util.Map,java.lang.Class,java.lang.Class)"]},
+                  {cont: java.util.Collections$CheckedSortedMap, allocsig: ["java.util.SortedMap checkedSortedMap(java.util.SortedMap,java.lang.Class,java.lang.Class)"]},
+                  {cont: java.util.Collections$CheckedNavigableMap, allocsig: ["java.util.NavigableMap checkedNavigableMap(java.util.NavigableMap,java.lang.Class,java.lang.Class)"]},
+                  {cont: java.util.Collections$EmptyMap, allocsig: ["java.util.Map emptyMap()"]},
+                  {cont: java.util.Collections$SingletonMap, allocsig: ["java.util.Map singletonMap(java.lang.Object,java.lang.Object)"]}]
+  util-batch-en: [# collection class
+                  {sig: "java.util.Collection unmodifiableCollection(java.util.Collection)", from: 0, to: -2, kind: COLLECTION},
+                  {sig: "java.util.Set unmodifiableSet(java.util.Set)", from: 0, to: -2, kind: COLLECTION},
+                  {sig: "java.util.SortedSet unmodifiableSortedSet(java.util.SortedSet)", from: 0, to: -2, kind: COLLECTION},
+                  {sig: "java.util.NavigableSet unmodifiableNavigableSet(java.util.NavigableSet)", from: 0, to: -2, kind: COLLECTION},
+                  {sig: "java.util.List unmodifiableList(java.util.List)", from: 0,to: -2, kind: COLLECTION},
+                  {sig: "java.util.Collection synchronizedCollection(java.util.Collection)", from: 0, to: -2, kind: COLLECTION},
+                  {sig: "java.util.Collection synchronizedCollection(java.util.Collection,java.lang.Object)", from: 0, to: -2, kind: COLLECTION},
+                  {sig: "java.util.Set synchronizedSet(java.util.Set)", from: 0, to: -2, kind: COLLECTION},
+                  {sig: "java.util.Set synchronizedSet(java.util.Set,java.lang.Object)", from: 0, to: -2, kind: COLLECTION},
+                  {sig: "java.util.SortedSet synchronizedSortedSet(java.util.SortedSet)", from: 0, to: -2, kind: COLLECTION},
+                  {sig: "java.util.NavigableSet synchronizedNavigableSet(java.util.NavigableSet)", from: 0, to: -2, kind: COLLECTION},
+                  {sig: "java.util.List synchronizedList(java.util.List)", from: 0, to: -2, kind: COLLECTION},
+                  {sig: "java.util.List synchronizedList(java.util.List,java.lang.Object)", from: 0, to: -2, kind: COLLECTION},
+                  {sig: "java.util.Collection checkedCollection(java.util.Collection,java.lang.Class)", from: 0, to: -2, kind: COLLECTION},
+                  {sig: "java.util.Queue checkedQueue(java.util.Queue,java.lang.Class)", from: 0, to: -2, kind: COLLECTION},
+                  {sig: "java.util.Set checkedSet(java.util.Set,java.lang.Class)", from: 0, to: -2, kind: COLLECTION},
+                  {sig: "java.util.SortedSet checkedSortedSet(java.util.SortedSet,java.lang.Class)", from: 0, to: -2, kind: COLLECTION},
+                  {sig: "java.util.NavigableSet checkedNavigableSet(java.util.NavigableSet,java.lang.Class)", from: 0, to: -2, kind: COLLECTION},
+                  {sig: "java.util.List checkedList(java.util.List,java.lang.Class)", from: 0, to: -2, kind: COLLECTION},
+                  {sig: "java.util.Queue asLifoQueue(java.util.Deque)", from: 0, to: -2, kind: COLLECTION},
+                  {sig: "void copy(java.util.List,java.util.List)", from: 1, to: 0, kind: COLLECTION},
+                  {sig: "java.util.ArrayList list(java.util.Enumeration)", from: 0, to: -2, kind: COLLECTION},
+                  # map class
+                  {sig: "java.util.Map unmodifiableMap(java.util.Map)", from: 0, to: -2, kind: MAP},
+                  {sig: "java.util.SortedMap unmodifiableSortedMap(java.util.SortedMap)", from: 0, to: -2, kind: MAP},
+                  {sig: "java.util.NavigableMap unmodifiableNavigableMap(java.util.NavigableMap)", from: 0, to: -2, kind: MAP},
+                  {sig: "java.util.Map synchronizedMap(java.util.Map)", from: 0, to: -2, kind: MAP},
+                  {sig: "java.util.SortedMap synchronizedSortedMap(java.util.SortedMap)", from: 0, to: -2, kind: MAP},
+                  {sig: "java.util.NavigableMap synchronizedNavigableMap(java.util.NavigableMap)", from: 0, to: -2, kind: MAP},
+                  {sig: "java.util.Map checkedMap(java.util.Map,java.lang.Class,java.lang.Class)", from: 0, to: -2, kind: MAP},
+                  {sig: "java.util.SortedMap checkedSortedMap(java.util.SortedMap,java.lang.Class,java.lang.Class)", from: 0, to: -2, kind: MAP},
+                  {sig: "java.util.NavigableMap checkedNavigableMap(java.util.NavigableMap,java.lang.Class,java.lang.Class)", from: 0, to: -2, kind: MAP}]
+  util-array-en: [{sig: "boolean addAll(java.util.Collection,java.lang.Object[])", from: 1, to: 0, unmodified: 0}]
+  util-entrance: [# collection class
+                  {sig: "java.util.Set singleton(java.lang.Object)", from: 0, to: -2, kind: COL_ITEM},
+                  {sig: "java.util.List singletonList(java.lang.Object)", from: 0, to: -2, kind: COL_ITEM},
+                  {sig: "java.util.List nCopies(int,java.lang.Object)", from: 1, to: -2, kind: COL_ITEM},
+                  {sig: "void fill(java.util.List,java.lang.Object)", from: 1, to: 0, kind: COL_ITEM},
+                  {sig: "boolean replaceAll(java.util.List,java.lang.Object,java.lang.Object)", from: 2, to: 0, kind: COL_ITEM},
+                  # map class
+                  {sig: "java.util.Map singletonMap(java.lang.Object,java.lang.Object)", from: 0, to: -2, kind: MAP_K},
+                  {sig: "java.util.Map singletonMap(java.lang.Object,java.lang.Object)", from: 1, to: -2, kind: MAP_V},
+                  {sig: "java.util.Iterator singletonIterator(java.lang.Object)", from: 0, to: -2, kind: COL_ITEM},
+                  {sig: "java.util.Spliterator singletonSpliterator(java.lang.Object)", from: 0, to: -2, kind: COL_ITEM}]
+  util-transfer: [{sig: "java.util.Enumeration enumeration(java.util.Collection)", from: 0, to: -2}]
+  reentrancy:    [{in: "void sort(java.util.List)", invosig: "<java.util.ListIterator: void set(java.lang.Object)>"},
+                  {in: "void sort(java.util.List,java.util.Comparator)", invosig: "<java.util.ListIterator: void set(java.lang.Object)>"},
+                  {in: "void reverse(java.util.List)", invosig: "<java.util.ListIterator: void set(java.lang.Object)>"},
+                  {in: "void shuffle(java.util.List,java.util.Random)", invosig: "<java.util.ListIterator: void set(java.lang.Object)>"},
+                  {in: "void swap(java.util.List,int,int)", invosig: "<java.util.List: java.lang.Object set(int,java.lang.Object)>"},
+                  {in: "void fill(java.util.List,java.lang.Object)", invosig: "<java.util.List: java.lang.Object set(int,java.lang.Object)>"},
+                  {in: "void fill(java.util.List,java.lang.Object)", invosig: "<java.util.ListIterator: void set(java.lang.Object)>"},
+                  {in: "void copy(java.util.List,java.util.List)", invosig: "<java.util.List: java.lang.Object set(int,java.lang.Object)>"},
+                  {in: "void copy(java.util.List,java.util.List)", invosig: "<java.util.ListIterator: void set(java.lang.Object)>"},
+                  {in: "void rotate1(java.util.List,int)", invosig: "<java.util.List: java.lang.Object set(int,java.lang.Object)>"},
+                  {in: "boolean replaceAll(java.util.List,java.lang.Object,java.lang.Object)", invosig: "<java.util.List: java.lang.Object set(int,java.lang.Object)>"},
+                  {in: "boolean replaceAll(java.util.List,java.lang.Object,java.lang.Object)", invosig: "<java.util.ListIterator: void set(java.lang.Object)>"},
+                  {in: "java.util.ArrayList list(java.util.Enumeration)", invosig: "<java.util.ArrayList: boolean add(java.lang.Object)>"},
+                  {in: "boolean addAll(java.util.Collection,java.lang.Object[])", invosig: "<java.util.Collection: boolean add(java.lang.Object)>"}]
+
+- util-class:    java.util.Arrays
+  private-class: [{cont: java.util.Arrays$ArrayList, allocsig: ["java.util.List asList(java.lang.Object[])"]},
+                  {cont: java.util.Spliterators$ArraySpliterator, allocsig: ["java.util.Spliterator spliterator(java.lang.Object[])", "java.util.Spliterator spliterator(java.lang.Object[],int,int)"]}]
+  util-array-en: [{sig: "java.util.List asList(java.lang.Object[])", from: 0, to: -2, unmodified: 1},
+                  {sig: "java.util.Spliterator spliterator(java.lang.Object[])", from: 0, to: -2, unmodified: 1},
+                  {sig: "java.util.Spliterator spliterator(java.lang.Object[],int,int)", from: 0, to: -2, unmodified: 1}]
+
+- util-class:    java.util.Spliterators
+  private-class: [{cont: java.util.Spliterators$ArraySpliterator, allocsig: ["java.util.Spliterator spliterator(java.lang.Object[],int)", "java.util.Spliterator spliterator(java.lang.Object[],int,int,int)"]}]
+  util-array-en: [{sig: "java.util.Spliterator spliterator(java.lang.Object[],int)", from: 0, to: -2, unmodified: 1},
+                  {sig: "java.util.Spliterator spliterator(java.lang.Object[],int,int,int)", from: 0, to: -2, unmodified: 1}]
+  util-transfer: [{sig: "java.util.Spliterator spliterator(java.util.Collection,int)", from: 0, to: -2},
+                  {sig: "java.util.Spliterator spliterator(java.util.Iterator,long,int)", from: 0, to: -2},
+                  {sig: "java.util.Spliterator spliteratorUnknownSize(java.util.Iterator,int)", from: 0, to: -2},
+                  {sig: "java.util.Iterator iterator(java.util.Spliterator)", from: 0, to: -2}]

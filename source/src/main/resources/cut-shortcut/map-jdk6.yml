@@ -1,0 +1,321 @@
+########################################################################
+#  config of map/dictionary classes for container access pattern
+#  of cut-shortcut (valid for jdk 1.6_045)
+########################################################################
+# config format for one class is as follows:
+# - class: name
+#   K-exit: exit methods for map keys
+#   V-exit: exit methods for map values
+#   E-exit: exit methods for map entries
+#   K-entrance: entrance methods for map keys
+#   V-entrance: entrance methods for map values
+#   batch-en: batch entrance methods, e.g., addAll, putAll
+#   array-en: array entrance, e,g, <init>(Object[])
+#   transfer: methods transferring host from base to result
+#   view: sub container class, no host is generated for them
+
+########################################################################
+#                     commonly seen classes
+########################################################################
+
+# config for java.util.Collection
+- class:      java.util.Collection
+  # add and addAll for entrySet, keySet, Values are not supported.
+  transfer:   [{sig: "java.util.Iterator iterator()",fromkind: MAP_K, tokind: MAP_K},
+               {sig: "java.util.Iterator iterator()",fromkind: MAP_V, tokind: MAP_V},
+               {sig: "java.util.Iterator iterator()",fromkind: MAP_E, tokind: MAP_E},
+               {sig: "java.util.Iterator iterator()",fromkind: MAP_ALL, tokind: MAP_ALL}]
+
+# config for java.util.Map
+- class:      java.util.Map
+  V-exit:     ["java.lang.Object get(java.lang.Object)",
+               "java.lang.Object put(java.lang.Object,java.lang.Object)",
+               "java.lang.Object remove(java.lang.Object)"]
+  K-entrance: [{sig: "java.lang.Object put(java.lang.Object,java.lang.Object)",index: 0}]
+  V-entrance: [{sig: "java.lang.Object put(java.lang.Object,java.lang.Object)",index: 1}]
+  batch-en:   [{sig: "void putAll(java.util.Map)",index: 0}]
+  transfer:   [{sig: "java.util.Set keySet()",fromkind: MAP_ALL, tokind: MAP_K},
+               {sig: "java.util.Collection values()",fromkind: MAP_ALL, tokind: MAP_V},
+               {sig: "java.util.Set entrySet()",fromkind: MAP_ALL, tokind: MAP_E},
+               {sig: "java.util.Set entrySet()",fromkind: MAP_ALL, tokind: MAP_ALL}]
+
+# config for java.util.Map$Entry
+- class:      java.util.Map$Entry
+  K-exit:     ["java.lang.Object getKey()"]
+  V-exit:     ["java.lang.Object getValue()",
+               "java.lang.Object setValue(java.lang.Object)"]
+  V-entrance: [{sig: "java.lang.Object setValue(java.lang.Object)",index: 0}]
+
+# config for java.util.Dictionary
+- class:      java.util.Dictionary
+  transfer:   [{sig: "java.util.Enumeration keys()",fromkind: MAP_ALL,tokind: MAP_K},
+               {sig: "java.util.Enumeration elements()",fromkind: MAP_ALL,tokind: MAP_V}]
+  V-exit:     ["java.lang.Object get(java.lang.Object)",
+               "java.lang.Object put(java.lang.Object,java.lang.Object)",
+               "java.lang.Object remove(java.lang.Object)"]
+  K-entrance: [{sig: "java.lang.Object put(java.lang.Object,java.lang.Object)",index: 0}]
+  V-entrance: [{sig: "java.lang.Object put(java.lang.Object,java.lang.Object)",index: 1}]
+
+# config for java.util.Iterator
+- class:      java.util.Iterator
+  transfer:   [{sig: "java.lang.Object next()",fromkind: MAP_ALL, tokind: MAP_ALL}]
+
+# config for java.util.Enumeration
+- class:      java.util.Enumeration
+  transfer:   [{sig: "java.lang.Object nextElement()",fromkind: MAP_ALL, tokind: MAP_ALL}]
+
+# config for java.util.AbstractMap
+- class:      java.util.AbstractMap
+  view:       [java.util.AbstractMap$1,
+               java.util.AbstractMap$1$1,
+               java.util.AbstractMap$2,
+               java.util.AbstractMap$2$1]
+- class:      java.util.AbstractMap$SimpleEntry
+  K-entrance: [{sig: "void <init>(java.lang.Object,java.lang.Object)", index: 0}]
+  V-entrance: [{sig: "void <init>(java.lang.Object,java.lang.Object)", index: 1}]
+  batch-en:   [{sig: "void <init>(java.util.Map$Entry)", index: 0}]
+- class:      java.util.AbstractMap$SimpleImmutableEntry
+  K-entrance: [{sig: "void <init>(java.lang.Object,java.lang.Object)", index: 0}]
+  V-entrance: [{sig: "void <init>(java.lang.Object,java.lang.Object)", index: 1}]
+  batch-en:   [{sig: "void <init>(java.util.Map$Entry)", index: 0}]
+
+# config for java.util.SortedMap
+- class:      java.util.SortedMap
+  K-exit:     ["java.lang.Object firstKey()",
+               "java.lang.Object lastKey()"]
+  transfer:   [{sig: "java.util.SortedMap subMap(java.lang.Object,java.lang.Object)",fromkind: MAP_ALL, tokind: MAP_ALL},
+               {sig: "java.util.SortedMap headMap(java.lang.Object)",fromkind: MAP_ALL, tokind: MAP_ALL},
+               {sig: "java.util.SortedMap tailMap(java.lang.Object)",fromkind: MAP_ALL, tokind: MAP_ALL}]
+
+# config for java.util.NavigableMap
+- class:      java.util.NavigableMap
+  K-exit:     ["java.lang.Object lowerKey(java.lang.Object)",
+               "java.lang.Object floorKey(java.lang.Object)",
+               "java.lang.Object ceilingKey(java.lang.Object)",
+               "java.lang.Object higherKey(java.lang.Object)"]
+  E-exit:     ["java.util.Map$Entry firstEntry()",
+               "java.util.Map$Entry lastEntry()",
+               "java.util.Map$Entry pollFirstEntry()",
+               "java.util.Map$Entry pollLastEntry()",
+               "java.util.Map$Entry lowerEntry(java.lang.Object)",
+               "java.util.Map$Entry floorEntry(java.lang.Object)",
+               "java.util.Map$Entry ceilingEntry(java.lang.Object)",
+               "java.util.Map$Entry higherEntry(java.lang.Object)"]
+  transfer:   [{sig: "java.util.NavigableMap descendingMap()",fromkind: MAP_ALL, tokind: MAP_ALL},
+               {sig: "java.util.NavigableSet navigableKeySet()",fromkind: MAP_ALL, tokind: MAP_K},
+               {sig: "java.util.NavigableSet descendingKeySet()",fromkind: MAP_ALL, tokind: MAP_K},
+               {sig: "java.util.NavigableMap subMap(java.lang.Object,boolean,java.lang.Object,boolean)",fromkind: MAP_ALL, tokind: MAP_ALL},
+               {sig: "java.util.NavigableMap headMap(java.lang.Object,boolean)",fromkind: MAP_ALL, tokind: MAP_ALL},
+               {sig: "java.util.NavigableMap tailMap(java.lang.Object,boolean)",fromkind: MAP_ALL, tokind: MAP_ALL},
+               {sig: "java.util.Map$Entry firstEntry()",fromkind: MAP_ALL,tokind: MAP_ALL},
+               {sig: "java.util.Map$Entry lastEntry()",fromkind: MAP_ALL,tokind: MAP_ALL},
+               {sig: "java.util.Map$Entry pollFirstEntry()",fromkind: MAP_ALL,tokind: MAP_ALL},
+               {sig: "java.util.Map$Entry pollLastEntry()",fromkind: MAP_ALL,tokind: MAP_ALL},
+               {sig: "java.util.Map$Entry lowerEntry(java.lang.Object)",fromkind: MAP_ALL,tokind: MAP_ALL},
+               {sig: "java.util.Map$Entry floorEntry(java.lang.Object)",fromkind: MAP_ALL,tokind: MAP_ALL},
+               {sig: "java.util.Map$Entry ceilingEntry(java.lang.Object)",fromkind: MAP_ALL,tokind: MAP_ALL},
+               {sig: "java.util.Map$Entry higherEntry(java.lang.Object)",fromkind: MAP_ALL,tokind: MAP_ALL}]
+
+# config for java.util.HashMap
+- class:      java.util.HashMap
+  batch-en:   [{sig: "void <init>(java.util.Map)",index: 0}]
+  transfer:   [{sig: "java.lang.Object clone()",fromkind: MAP_ALL, tokind: MAP_ALL}]
+  view:       [java.util.HashMap$Entry,
+               java.util.HashMap$HashIterator,
+               java.util.HashMap$ValueIterator,
+               java.util.HashMap$KeyIterator,
+               java.util.HashMap$EntryIterator,
+               java.util.HashMap$KeySet,
+               java.util.HashMap$Values,
+               java.util.HashMap$EntrySet]
+
+# config for java.util.LinkedHashMap
+- class:      java.util.LinkedHashMap
+  batch-en:   [{sig: "void <init>(java.util.Map)",index: 0}]
+  view:       [java.util.LinkedHashMap$Entry,
+               java.util.LinkedHashMap$LinkedHashIterator,
+               java.util.LinkedHashMap$KeyIterator,
+               java.util.LinkedHashMap$ValueIterator,
+               java.util.LinkedHashMap$EntryIterator]
+
+# config for java.util.IdentityHashMap
+- class:      java.util.IdentityHashMap
+  batch-en:   [{sig: "void <init>(java.util.Map)",index: 0}]
+  transfer:   [{sig: "java.lang.Object clone()",fromkind: MAP_ALL, tokind: MAP_ALL}]
+  view:       [java.util.IdentityHashMap$IdentityHashMapIterator,
+               java.util.IdentityHashMap$KeyIterator,
+               java.util.IdentityHashMap$ValueIterator,
+               java.util.IdentityHashMap$EntryIterator,
+               java.util.IdentityHashMap$KeySet,
+               java.util.IdentityHashMap$Values,
+               java.util.IdentityHashMap$EntrySet]
+
+# config for java.util.EnumMap
+- class:      java.util.EnumMap
+  batch-en:   [{sig: "void <init>(java.util.EnumMap)",index: 0},
+               {sig: "void <init>(java.util.Map)",index: 0}]
+  transfer:   [{sig: "java.lang.Object clone()",fromkind: MAP_ALL, tokind: MAP_ALL}]
+  view:       [java.util.EnumMap$KeySet,
+               java.util.EnumMap$Values,
+               java.util.EnumMap$EntrySet,
+               java.util.EnumMap$EnumMapIterator,
+               java.util.EnumMap$KeyIterator,
+               java.util.EnumMap$ValueIterator,
+               java.util.EnumMap$EntryIterator]
+
+# config for java.util.Hashtable
+- class:      java.util.Hashtable
+  batch-en:   [{sig: "void <init>(java.util.Map)",index: 0}]
+  transfer:   [{sig: "java.lang.Object clone()",fromkind: MAP_ALL, tokind: MAP_ALL}]
+  view:       [java.util.Hashtable$KeySet,
+               java.util.Hashtable$EntrySet,
+               java.util.Hashtable$ValueCollection,
+               java.util.Hashtable$Entry,
+               java.util.Hashtable$Enumerator,
+               java.util.Hashtable$EmptyEnumerator,
+               java.util.Hashtable$EmptyIterator]
+
+# config for java.util.TreeMap
+- class:      java.util.TreeMap
+  batch-en:   [{sig: "void <init>(java.util.Map)",index: 0},
+               {sig: "void <init>(java.util.SortedMap)",index: 0}]
+  transfer:   [{sig: "java.lang.Object clone()",fromkind: MAP_ALL, tokind: MAP_ALL}]
+  view:       [java.util.TreeMap$Values,
+               java.util.TreeMap$EntrySet,
+               java.util.TreeMap$KeySet,
+               java.util.TreeMap$PrivateEntryIterator,
+               java.util.TreeMap$EntryIterator,
+               java.util.TreeMap$ValueIterator,
+               java.util.TreeMap$KeyIterator,
+               java.util.TreeMap$DescendingKeyIterator,
+               java.util.TreeMap$NavigableSubMap,
+               java.util.TreeMap$NavigableSubMap$EntrySetView,
+               java.util.TreeMap$NavigableSubMap$SubMapIterator,
+               java.util.TreeMap$NavigableSubMap$SubMapEntryIterator,
+               java.util.TreeMap$NavigableSubMap$SubMapKeyIterator,
+               java.util.TreeMap$NavigableSubMap$DescendingSubMapEntryIterator,
+               java.util.TreeMap$NavigableSubMap$DescendingSubMapKeyIterator,
+               java.util.TreeMap$AscendingSubMap,
+               java.util.TreeMap$AscendingSubMap$AscendingEntrySetView,
+               java.util.TreeMap$DescendingSubMap,
+               java.util.TreeMap$DescendingSubMap$DescendingEntrySetView,
+               java.util.TreeMap$SubMap,
+               java.util.TreeMap$Entry]
+
+# config for java.util.WeakHashMap
+- class:      java.util.WeakHashMap
+  batch-en:   [{sig: "void <init>(java.util.Map)",index: 0}]
+  view:       [java.util.WeakHashMap$Entry,
+               java.util.WeakHashMap$HashIterator,
+               java.util.WeakHashMap$ValueIterator,
+               java.util.WeakHashMap$KeyIterator,
+               java.util.WeakHashMap$EntryIterator,
+               java.util.WeakHashMap$KeySet,
+               java.util.WeakHashMap$Values,
+               java.util.WeakHashMap$EntrySet]
+
+# config for java.util.concurrent.ConcurrentMap
+- class:      java.util.concurrent.ConcurrentMap
+  V-exit:     ["java.lang.Object putIfAbsent(java.lang.Object,java.lang.Object)",
+               "java.lang.Object replace(java.lang.Object,java.lang.Object)"]
+  K-entrance: [{sig: "java.lang.Object putIfAbsent(java.lang.Object,java.lang.Object)",index: 0},
+               {sig: "boolean replace(java.lang.Object,java.lang.Object,java.lang.Object)",index: 0},
+               {sig: "java.lang.Object replace(java.lang.Object,java.lang.Object)",index: 0}]
+  V-entrance: [{sig: "java.lang.Object putIfAbsent(java.lang.Object,java.lang.Object)",index: 1},
+               {sig: "boolean replace(java.lang.Object,java.lang.Object,java.lang.Object)",index: 2},
+               {sig: "java.lang.Object replace(java.lang.Object,java.lang.Object)",index: 1}]
+
+# config for java.util.concurrent.ConcurrentNavigableMap
+- class:      java.util.concurrent.ConcurrentNavigableMap
+
+# config for java.util.concurrent.ConcurrentHashMap
+- class:      java.util.concurrent.ConcurrentHashMap
+  batch-en:   [{sig: "void <init>(java.util.Map)",index: 0}]
+  transfer:   [{sig: "java.util.Enumeration keys()",fromkind: MAP_ALL,tokind: MAP_K },
+               {sig: "java.util.Enumeration elements()",fromkind: MAP_ALL,tokind: MAP_V }]
+  view:       [java.util.concurrent.ConcurrentHashMap$KeyIterator,
+               java.util.concurrent.ConcurrentHashMap$ValueIterator,
+               java.util.concurrent.ConcurrentHashMap$WriteThroughEntry,
+               java.util.concurrent.ConcurrentHashMap$EntryIterator,
+               java.util.concurrent.ConcurrentHashMap$KeySet,
+               java.util.concurrent.ConcurrentHashMap$Values,
+               java.util.concurrent.ConcurrentHashMap$EntrySet]
+
+# config for java.util.concurrent.ConcurrentSkipListMap
+- class:      java.util.concurrent.ConcurrentSkipListMap
+  batch-en:   [{sig: "void <init>(java.util.Map)",index: 0},
+               {sig: "void <init>(java.util.SortedMap)",index: 0}]
+  transfer:   [{sig: "java.lang.Object clone()",fromkind: MAP_ALL, tokind: MAP_ALL}]
+  view:       [java.util.concurrent.ConcurrentSkipListMap$Iter,
+               java.util.concurrent.ConcurrentSkipListMap$ValueIterator,
+               java.util.concurrent.ConcurrentSkipListMap$KeyIterator,
+               java.util.concurrent.ConcurrentSkipListMap$EntryIterator,
+               java.util.concurrent.ConcurrentSkipListMap$KeySet,
+               java.util.concurrent.ConcurrentSkipListMap$Values,
+               java.util.concurrent.ConcurrentSkipListMap$EntrySet,
+               java.util.concurrent.ConcurrentSkipListMap$SubMap,
+               java.util.concurrent.ConcurrentSkipListMap$SubMap$SubMapIter,
+               java.util.concurrent.ConcurrentSkipListMap$SubMap$SubMapValueIterator,
+               java.util.concurrent.ConcurrentSkipListMap$SubMap$SubMapKeyIterator,
+               java.util.concurrent.ConcurrentSkipListMap$SubMap$SubMapEntryIterator]
+
+# config for classes in java.util.Collections
+# en/batch-en in these classes are ignored and handled by utils-jdk6.yml
+# util class should be in box, (so that return edge is not cut)
+# view class should be configured in corresponding config (so that they do not generate unsound hosts)
+- class:      java.util.Collections$UnmodifiableMap
+  view:       [java.util.Collections$UnmodifiableMap$UnmodifiableEntrySet,
+               java.util.Collections$UnmodifiableMap$UnmodifiableEntrySet$1,
+               java.util.Collections$UnmodifiableMap$UnmodifiableEntrySet$UnmodifiableEntry]
+- class:      java.util.Collections$UnmodifiableSortedMap
+- class:      java.util.Collections$SynchronizedMap
+- class:      java.util.Collections$SynchronizedSortedMap
+- class:      java.util.Collections$CheckedMap
+  view:       [java.util.Collections$CheckedMap$CheckedEntrySet,
+               java.util.Collections$CheckedMap$CheckedEntrySet$1,
+               java.util.Collections$CheckedMap$CheckedEntrySet$CheckedEntry]
+- class:      java.util.Collections$CheckedSortedMap
+- class:      java.util.Collections$EmptyMap
+- class:      java.util.Collections$SingletonMap
+
+# config for java.lang.ProcessEnvironment$StringEnvironment
+- class:      java.lang.ProcessEnvironment$StringEnvironment
+  batch-en:   [{sig: "void <init>(java.util.Map)",index: 0}]
+  view:       [java.lang.ProcessEnvironment$StringEntry,
+               java.lang.ProcessEnvironment$StringEntrySet,
+               java.lang.ProcessEnvironment$StringValues,
+               java.lang.ProcessEnvironment$StringKeySet,
+               java.lang.ProcessEnvironment$StringEntrySet$1,
+               java.lang.ProcessEnvironment$StringValues$1,
+               java.lang.ProcessEnvironment$StringKeySet$1,
+               java.lang.ProcessEnvironment$StringEntrySet$2]
+
+# config for java.util.Properties
+- class:      java.util.Properties
+  V-exit:     ["java.lang.String getProperty(java.lang.String)",
+               "java.lang.String getProperty(java.lang.String,java.lang.String)"]
+  K-entrance: [{sig: "java.lang.Object setProperty(java.lang.String,java.lang.String)",index: 0}]
+  V-entrance: [{sig: "java.lang.Object setProperty(java.lang.String,java.lang.String)",index: 1}]
+  batch-en:   [{sig: "void <init>(java.util.Properties)",index: 0}]
+  transfer:   [{sig: "java.util.Enumeration propertyNames()",fromkind: MAP_ALL, tokind: MAP_K },
+               {sig: "java.util.Set stringPropertyNames()",fromkind: MAP_ALL, tokind: MAP_K }]
+
+# config for java.awt.RenderingHints
+- class:      java.awt.RenderingHints
+  batch-en:   [{sig: "void <init>(java.util.Map)",index: 0},
+               {sig: "void add(java.awt.RenderingHints)",index: 0}]
+  K-entrance: [{sig: "void <init>(java.awt.RenderingHints$Key,java.lang.Object)",index: 0}]
+  V-entrance: [{sig: "void <init>(java.awt.RenderingHints$Key,java.lang.Object)",index: 1}]
+
+# config for java.io.ExpiringCache$1
+- class:      java.io.ExpiringCache$1
+
+# config for sun.util.PreHashedMap
+- class:      sun.util.PreHashedMap
+
+########################################################################
+#        custom classes (user can add config by themselves)
+########################################################################
+- class:      MyClonnableMap
+  batch-en:   [{sig: "void <init>(java.util.Map)",index: 0}]
+  transfer:   [{sig: "java.lang.Object clone()",fromkind: MAP_ALL, tokind: MAP_ALL}]

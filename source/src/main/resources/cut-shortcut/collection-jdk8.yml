@@ -1,0 +1,412 @@
+########################################################################
+#  config of collection classes for container access pattern
+#  of cut-shortcut (valid for jdk 1.8)
+########################################################################
+# config format for one class is as follows:
+# - class: name
+#   exit: exit methods, e.g., get()
+#   entrance: entrance methods, e.g., add(e)
+#   batch-ex: batch-exit methods, e.g., drainTo
+#   batch-en: batch-entrance methods, e.g., addAll(c), putAll(c)
+#   array-en: array entrance, e,g, <init>(Object[])
+#   transfer: methods transferring host from base to result, e.g., iterator()
+#   repl-all: replaceAll in lists, need to integrated with lambdaAnalysis.
+#   unsound: APIs make a container's source unable to find in source code
+#   view: sub container class, no host is generated for them
+
+########################################################################
+#                     commonly seen classes
+########################################################################
+
+# config for java.util.Collection
+- class:    java.util.Collection
+  entrance: [{sig: "boolean add(java.lang.Object)",index: 0}]
+  batch-en: [{sig: "boolean addAll(java.util.Collection)",index: 0}]
+  transfer: ["java.util.Iterator iterator()",
+             "java.util.Spliterator spliterator()"]
+
+# config for java.util.Iterator
+- class:    java.util.Iterator
+  exit:     ["java.lang.Object next()"]
+
+# config for java.lang.Iterable
+- class:    java.lang.Iterable
+
+# config for java.util.ListIterator
+- class:    java.util.ListIterator
+  exit:     ["java.lang.Object next()",
+             "java.lang.Object previous()"]
+  entrance: [{sig: "void add(java.lang.Object)",index: 0},
+             {sig: "void set(java.lang.Object)",index: 0}]
+
+# config for java.util.Enumeration
+- class:    java.util.Enumeration
+  exit:     ["java.lang.Object nextElement()"]
+
+# config gor java.util.Spliterator
+- class:    java.util.Spliterator
+  transfer: ["java.util.Spliterator trySplit()"]
+
+# config for java.util.AbstractCollection
+- class:    java.util.AbstractCollection
+
+# config for java.util.List
+- class:    java.util.List
+  exit:     ["java.lang.Object get(int)",
+             "java.lang.Object remove(int)",
+             "java.lang.Object set(int,java.lang.Object)"]
+  entrance: [{sig: "java.lang.Object set(int,java.lang.Object)",index: 1},
+             {sig: "void add(int,java.lang.Object)",index: 1}]
+  batch-en: [{sig: "boolean addAll(int,java.util.Collection)",index: 1}]
+  transfer: ["java.util.ListIterator listIterator()",
+             "java.util.ListIterator listIterator(int)",
+             "java.util.List subList(int,int)"]
+  repl-all:  ["void replaceAll(java.util.function.UnaryOperator)"]
+
+# config for java.util.AbstractList
+- class:    java.util.AbstractList
+  batch-en: [ { sig: "void <init>(java.util.AbstractList,int,int)", index: 0 } ]
+  view:     [java.util.AbstractList$Itr,
+             java.util.AbstractList$ListItr,
+             java.util.SubList,
+             java.util.SubList$1,
+             java.util.RandomAccessSubList]
+
+# config for java.util.Queue
+- class:    java.util.Queue
+  exit:     ["java.lang.Object remove()",
+             "java.lang.Object peek()",
+             "java.lang.Object element()",
+             "java.lang.Object poll()",]
+  entrance: [{sig: "boolean add(java.lang.Object)",index: 0},
+             {sig: "boolean offer(java.lang.Object)",index: 0}]
+
+# config for java.util.AbstractQueue
+- class:    java.util.AbstractQueue
+
+# config for java.util.Deque
+- class:    java.util.Deque
+  exit:     ["java.lang.Object removeFirst()",
+             "java.lang.Object removeLast()",
+             "java.lang.Object pollFirst()",
+             "java.lang.Object pollLast()",
+             "java.lang.Object getFirst()",
+             "java.lang.Object getLast()",
+             "java.lang.Object peekFirst()",
+             "java.lang.Object peekLast()",
+             "java.lang.Object pop()"]
+  entrance: [{sig: "void addFirst(java.lang.Object)",index: 0},
+             {sig: "void addLast(java.lang.Object)",index: 0},
+             {sig: "boolean offerFirst(java.lang.Object)",index: 0},
+             {sig: "boolean offerLast(java.lang.Object)",index: 0},
+             {sig: "void push(java.lang.Object)",index: 0}]
+  transfer: ["java.util.Iterator descendingIterator()"]
+
+# config for java.util.AbstractSequentialList
+- class:    java.util.AbstractSequentialList
+
+# config for java.util.ArrayList
+- class:    java.util.ArrayList
+  batch-en: [{sig: "void <init>(java.util.Collection)",index: 0}]
+  transfer: ["java.lang.Object clone()"]
+  view:     [java.util.ArrayList$Itr,
+             java.util.ArrayList$ListItr,
+             java.util.ArrayList$SubList,
+             java.util.ArrayList$SubList$1,
+             java.util.ArrayList$ArrayListSpliterator]
+
+# config for java.util.LinkedList
+- class:    java.util.LinkedList
+  batch-en: [{sig: "void <init>(java.util.Collection)",index: 0}]
+  transfer: ["java.lang.Object clone()"]
+  view:     [java.util.LinkedList$ListItr,
+             java.util.LinkedList$DescendingIterator,
+             java.util.LinkedList$LLSpliterator]
+
+# config for java.util.Set
+- class:    java.util.Set
+
+# config for java.util.AbstractSet
+- class:    java.util.AbstractSet
+
+# config for java.util.SortedSet
+- class:    java.util.SortedSet
+  exit:     ["java.lang.Object first()",
+             "java.lang.Object last()"]
+  transfer: ["java.util.SortedSet subSet(java.lang.Object,java.lang.Object)",
+             "java.util.SortedSet headSet(java.lang.Object)",
+             "java.util.SortedSet tailSet(java.lang.Object)"]
+  view:     [java.util.SortedSet$1]
+
+# config for java.util.NavigableSet
+- class:    java.util.NavigableSet
+  exit:     ["java.lang.Object lower(java.lang.Object)",
+             "java.lang.Object floor(java.lang.Object)",
+             "java.lang.Object ceiling(java.lang.Object)",
+             "java.lang.Object higher(java.lang.Object)",
+             "java.lang.Object pollFirst()",
+             "java.lang.Object pollLast()"]
+  transfer: [ "java.util.Iterator descendingIterator()",
+              "java.util.NavigableSet descendingSet()",
+              "java.util.NavigableSet subSet(java.lang.Object,boolean,java.lang.Object,boolean)",
+              "java.util.NavigableSet headSet(java.lang.Object,boolean)",
+              "java.util.NavigableSet tailSet(java.lang.Object,boolean)"]
+
+# config for java.util.HashSet
+- class:    java.util.HashSet
+  batch-en: [{sig: "void <init>(java.util.Collection)",index: 0}]
+  transfer: ["java.lang.Object clone()"]
+
+# config for java.util.LinkedHashSet
+- class:    java.util.LinkedHashSet
+  batch-en: [{sig: "void <init>(java.util.Collection)",index: 0}]
+
+# config for java.util.PriorityQueue
+- class:    java.util.PriorityQueue
+  batch-en: [{sig: "void <init>(java.util.Collection)",index: 0},
+             {sig: "void <init>(java.util.PriorityQueue)",index: 0},
+             {sig: "void <init>(java.util.SortedSet)",index: 0}]
+  view:     [java.util.PriorityQueue$Itr,
+             java.util.PriorityQueue$PriorityQueueSpliterator]
+
+# config for java.util.ArrayDeque
+- class:    java.util.ArrayDeque
+  batch-en: [{sig: "void <init>(java.util.Collection)",index: 0}]
+  transfer: ["java.lang.Object clone()"]
+  view:     [java.util.ArrayDeque$DeqIterator,
+             java.util.ArrayDeque$DescendingIterator,
+             java.util.ArrayDeque$DeqSpliterator]
+
+# config for java.util.Stack
+- class:    java.util.Stack
+  exit:     ["java.lang.Object push(java.lang.Object)",
+             "java.lang.Object pop()",
+             "java.lang.Object peek()"]
+  entrance: [{sig: "java.lang.Object push(java.lang.Object)", index: 0}]
+
+# config for java.util.Vector
+- class:    java.util.Vector
+  exit:     ["java.lang.Object elementAt(int)",
+             "java.lang.Object firstElement()",
+             "java.lang.Object lastElement()"]
+  entrance: [{sig: "void setElementAt(java.lang.Object,int)",index: 0},
+             {sig: "void insertElementAt(java.lang.Object,int)",index: 0},
+             {sig: "void addElement(java.lang.Object)",index: 0 }]
+  batch-en: [{sig: "void <init>(java.util.Collection)",index: 0}]
+  transfer: ["java.util.Enumeration elements()",
+             "java.lang.Object clone()"]
+  view:     [java.util.Vector$1,
+             java.util.Vector$1,
+             java.util.Vector$Itr,
+             java.util.Vector$ListItr,
+             java.util.Vector$VectorSpliterator]
+
+# config for java.util.TreeSet
+- class:    java.util.TreeSet
+  batch-en: [{sig: "void <init>(java.util.Collection)",index: 0},
+             {sig: "void <init>(java.util.SortedSet)",index: 0}]
+  #  batch-en: [{sig: "void <init>(java.util.NavigableMap)", index: 0}]
+  #  is default and only used safely
+  transfer: ["java.lang.Object clone()"]
+
+# config for java.util.concurrent.TransferQueue
+- class:    java.util.concurrent.TransferQueue
+  entrance: [{sig: "boolean tryTransfer(java.lang.Object)",index: 0},
+             {sig: "void transfer(java.lang.Object)",index: 0},
+             {sig: "boolean tryTransfer(java.lang.Object,long,java.util.concurrent.TimeUnit)",index: 0}]
+
+# config for java.util.concurrent.BlockingQueue
+- class:    java.util.concurrent.BlockingQueue
+  exit:     ["java.lang.Object take()",
+             "java.lang.Object poll(long,java.util.concurrent.TimeUnit)"]
+  entrance: [{sig: "void put(java.lang.Object)",index: 0},
+             {sig: "boolean offer(java.lang.Object,long,java.util.concurrent.TimeUnit)",index: 0}]
+  batch-ex: [{sig: "int drainTo(java.util.Collection)",index: 0},
+             {sig: "int drainTo(java.util.Collection,int)",index: 0}]
+
+# config for java.util.concurrent.BlockingDeque
+- class:    java.util.concurrent.BlockingDeque
+  exit:     ["java.lang.Object takeFirst()",
+             "java.lang.Object takeLast()",
+             "java.lang.Object pollFirst(long,java.util.concurrent.TimeUnit)",
+             "java.lang.Object pollLast(long,java.util.concurrent.TimeUnit)"]
+  entrance: [{sig: "void putFirst(java.lang.Object)",index: 0},
+             {sig: "void putLast(java.lang.Object)",index: 0},
+             {sig: "boolean offerFirst(java.lang.Object,long,java.util.concurrent.TimeUnit)",index: 0},
+             {sig: "boolean offerLast(java.lang.Object,long,java.util.concurrent.TimeUnit)",index: 0}]
+
+# config for java.util.concurrent.DelayQueue
+- class:    java.util.concurrent.DelayQueue
+  batch-en: [{sig: "void <init>(java.util.Collection)",index: 0}]
+  view:     [java.util.concurrent.DelayQueue$Itr]
+
+# config for java.util.concurrent.ArrayBlockingQueue
+- class:    java.util.concurrent.ArrayBlockingQueue
+  batch-en: [{sig: "void <init>(int,boolean,java.util.Collection)",index: 2}]
+  view:     [java.util.concurrent.ArrayBlockingQueue$Itr]
+
+# config for java.util.concurrent.ConcurrentLinkedDeque
+- class:    java.util.concurrent.ConcurrentLinkedDeque
+  batch-en: [{sig: "void <init>(java.util.Collection)",index: 0}]
+  view:     [java.util.concurrent.ConcurrentLinkedDeque$AbstractItr,
+             java.util.concurrent.ConcurrentLinkedDeque$Itr,
+             java.util.concurrent.ConcurrentLinkedDeque$DescendingItr,
+             java.util.concurrent.ConcurrentLinkedDeque$CLDSpliterator]
+
+# config for java.util.concurrent.ConcurrentLinkedQueue
+- class:    java.util.concurrent.ConcurrentLinkedQueue
+  batch-en: [{ sig: "void <init>(java.util.Collection)",index: 0}]
+  view:     [java.util.concurrent.ConcurrentLinkedQueue$Itr,
+             java.util.concurrent.ConcurrentLinkedQueue$CLQSpliterator]
+
+# config for java.util.concurrent.ConcurrentSkipListSet
+- class:    java.util.concurrent.ConcurrentSkipListSet
+  batch-en: [{ sig: "void <init>(java.util.Collection)",index: 0},
+             { sig: "void <init>(java.util.SortedSet)",index: 0}]
+  transfer: ["java.lang.Object clone()"]
+# batch-en void <init>(java.util.concurrent.ConcurrentNavigableMap)
+# is default and only used soundly
+
+# config for java.util.concurrent.CopyOnWriteArrayList
+- class:    java.util.concurrent.CopyOnWriteArrayList
+  entrance: [{sig: "boolean addIfAbsent(java.lang.Object)",index: 0}]
+  batch-en: [{sig: "void <init>(java.util.Collection)",index: 0 },
+             {sig: "int addAllAbsent(java.util.Collection)",index: 0}]
+  array-en: [{sig: "void <init>(java.lang.Object[])",index: 0, unmodified: 0}]
+  transfer: ["java.lang.Object clone()"]
+  view:     [java.util.concurrent.CopyOnWriteArrayList$COWIterator,
+             java.util.concurrent.CopyOnWriteArrayList$COWSubListIterator,
+             java.util.concurrent.CopyOnWriteArrayList$COWSubList]
+
+# config for java.util.concurrent.CopyOnWriteArraySet
+- class:    java.util.concurrent.CopyOnWriteArraySet
+  batch-en: [{sig: "void <init>(java.util.Collection)",index: 0}]
+
+# config for java.util.concurrent.LinkedBlockingQueue
+- class:    java.util.concurrent.LinkedBlockingQueue
+  batch-en: [{sig: "void <init>(java.util.Collection)",index: 0}]
+  view:     [java.util.concurrent.LinkedBlockingQueue$Itr,
+             java.util.concurrent.LinkedBlockingQueue$LBQSpliterator]
+
+# config for java.util.concurrent.LinkedBlockingDeque
+- class:    java.util.concurrent.LinkedBlockingDeque
+  batch-en: [{sig: "void <init>(java.util.Collection)",index: 0}]
+  view:     [java.util.concurrent.LinkedBlockingDeque$AbstractItr,
+             java.util.concurrent.LinkedBlockingDeque$Itr,
+             java.util.concurrent.LinkedBlockingDeque$DescendingItr,
+             java.util.concurrent.LinkedBlockingDeque$LBDSpliterator]
+
+# config for java.concurrent.LinkedTransferQueue
+- class:     java.util.concurrent.LinkedTransferQueue
+  batch-en:  [{sig: "void <init>(java.util.Collection)",index: 0}]
+  view:      [java.concurrent.LinkedTransferQueue$Itr,
+              java.concurrent.LinkedTransferQueue$LTQSpliterator]
+
+# config for java.util.concurrent.PriorityBlockingQueue
+- class:    java.util.concurrent.PriorityBlockingQueue
+  batch-en: [{sig: "void <init>(java.util.Collection)",index: 0}]
+  view:     [java.util.concurrent.PriorityBlockingQueue$Itr,
+             java.util.concurrent.PriorityBlockingQueue$PBQSpliterator]
+
+# config for java.util.concurrent.SynchronousQueue
+- class:    java.util.concurrent.SynchronousQueue
+
+# config for classes in java.util.Collections
+# en/batch-en in these classes are ignored and handled by utils-jdk8.yml
+# util class should be in box, (so that return edge is not cut)
+# view class should be configured in corresponding config (so that they do not generate unsound hosts)
+- class:    java.util.Collections
+  view:     [java.util.Collections$3,
+             java.util.Collections$EmptyIterator,
+             java.util.Collections$EmptyListIterator,
+             java.util.Collections$EmptyEnumeration]
+- class:    java.util.Collections$1
+- class:    java.util.Collections$2
+- class:    java.util.Collections$UnmodifiableCollection
+  view:     [java.util.Collections$UnmodifiableCollection$1]
+- class:    java.util.Collections$UnmodifiableSet
+- class:    java.util.Collections$UnmodifiableSortedSet
+- class:    java.util.Collections$UnmodifiableNavigableSet
+- class:    java.util.Collections$UnmodifiableNavigableSet$EmptyNavigableSet
+- class:    java.util.Collections$UnmodifiableList
+  view:     [java.util.Collections$UnmodifiableList$1]
+- class:    java.util.Collections$UnmodifiableRandomAccessList
+- class:    java.util.Collections$SynchronizedCollection
+- class:    java.util.Collections$SynchronizedSet
+- class:    java.util.Collections$SynchronizedSortedSet
+- class:    java.util.Collections$SynchronizedNavigableSet
+- class:    java.util.Collections$SynchronizedList
+- class:    java.util.Collections$SynchronizedRandomAccessList
+- class:    java.util.Collections$CheckedCollection
+  view:     [java.util.Collections$CheckedCollection$1]
+- class:    java.util.Collections$CheckedQueue
+- class:    java.util.Collections$CheckedSet
+- class:    java.util.Collections$CheckedSortedSet
+- class:    java.util.Collections$CheckedNavigableSet
+- class:    java.util.Collections$CheckedList
+  view:     [java.util.Collections$CheckedList$1]
+- class:    java.util.Collections$CheckedRandomAccessList
+- class:    java.util.Collections$EmptySet
+- class:    java.util.Collections$EmptyList
+- class:    java.util.Collections$SingletonSet
+  view:     [java.util.Collections$SingletonSet$1]
+- class:    java.util.Collections$SingletonList
+- class:    java.util.Collections$CopiesList
+- class:    java.util.Collections$AsLIFOQueue
+# java.util.Collections$SetFromMap can not be configured
+# without compromising soundness without special handling
+
+# config for classes in java.util.Spliterators
+# en/batch-en in these classes are ignored and handled by utils-jdk8.yml
+# util class should be in box, (so that return edge is not cut)
+# view class should be configured in corresponding config (so that they do not generate unsound hosts)
+- class:    java.util.Spliterators
+  view:     [java.util.Spliterators$EmptySpliterator,
+             java.util.Spliterators$EmptySpliterator$OfRef,
+             java.util.Spliterators$1Adapter,
+             java.util.Spliterators$IteratorSpliterator]
+- class:    java.util.Spliterators$ArraySpliterator
+
+# config for java.util.Arrays
+- class:    java.util.Arrays$ArrayList
+
+# config for java.util.stream.Collectors
+- class:    java.util.stream.Collectors$Partition
+  view:     [java.util.stream.Collectors$Partition$1]
+
+# config for java.util.stream.Streams
+- class:    java.util.stream.Streams
+  view:     [java.util.stream.Streams$AbstractStreamBuilderImpl,
+             java.util.stream.Streams$StreamBuilderImpl,
+             java.util.stream.Streams$ConcatSpliterator,
+             java.util.stream.Streams$ConcatSpliterator.OfRef]
+
+# config for java.util.stream.StreamSpliterators
+# some spliterators in StreamSpliterators cannot find sound input,
+# so should be considered as unsound custom spliterator
+- class:    java.util.stream.StreamSpliterators
+  view:     [java.util.stream.StreamSpliterators$AbstractWrappingSpliterator,
+             java.util.stream.StreamSpliterators$WrappingSpliterator,
+             java.util.stream.StreamSpliterators$DelegatingSpliterator,
+             java.util.stream.StreamSpliterators$SliceSpliterator,
+             java.util.stream.StreamSpliterators$SliceSpliterator$OfRef,
+             java.util.stream.StreamSpliterators$UnorderedSliceSpliterator,
+             java.util.stream.StreamSpliterators$UnorderedSliceSpliterator$OfRef,
+             java.util.stream.StreamSpliterators$DistinctSpliterator]
+#- class:    java.util.stream.StreamSpliterators$InfiniteSupplyingSpliterator,
+#- class:    java.util.stream.StreamSpliterators$InfiniteSupplyingSpliterator$OfRef
+
+# config for javax.security.auth.Subject$ClassSet
+- class:    javax.security.auth.Subject$ClassSet
+- class:    javax.security.auth.Subject$SecureSet
+  batch-en: [{sig: "void <init>(javax.security.auth.Subject,int,java.util.Set)",index: 2}]
+  view:     [javax.security.auth.Subject$SecureSet$1]
+
+# config for javax.imageio.spi.PartiallyOrderedSet
+- class: javax.imageio.spi.PartiallyOrderedSet
+- class: javax.imageio.spi.PartiallyOrderedSet
+  batch-en: [{sig: "void <init>(java.util.Iterator)",index: 0}]
+
+########################################################################
+#        custom classes (user can add config by themselves)
+########################################################################

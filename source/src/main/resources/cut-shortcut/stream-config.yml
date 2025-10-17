@@ -1,0 +1,121 @@
+################################################################
+#  config of stream APIs for cut-shortcut pointer analysis
+################################################################
+
+# these class's closure of inner-class defines the config box
+- scope:    [# class holding strm
+             java.util.stream.BaseStream,
+             java.util.stream.Stream,
+             java.util.stream.ReferencePipeline,
+             java.util.stream.AbstractPipeline,
+             java.util.stream.DoublePipeline,
+             java.util.stream.DoubleStream,
+             java.util.stream.IntPipeline,
+             java.util.stream.IntStream,
+             java.util.stream.LongPipeline,
+             java.util.stream.LongStream,
+             java.util.Optional,
+             java.util.stream.PipelineHelper,
+             # Stream Op classes
+             java.util.stream.AbstractTask,
+             java.util.stream.AbstractShortCircuitTask,
+             java.util.stream.DistinctOps,
+             java.util.stream.FindOps,
+             java.util.stream.ForEachOps,
+             java.util.stream.MatchOps,
+             java.util.stream.ReduceOps,
+             java.util.stream.SliceOps,
+             java.util.stream.SortedOps,
+             java.util.stream.TerminalOp,
+             java.util.stream.TerminalSink,
+             java.util.stream.Sink,
+             # support classes
+             java.util.stream.StreamSupport,
+             java.util.stream.Streams,
+             java.util.stream.Node,
+             java.util.stream.Nodes,
+             java.util.stream.AbstractSpinedBuffer,
+             java.util.stream.SpinedBuffer,
+             java.util.stream.StreamSpliterators]
+  creation: ["<java.util.stream.Stream: java.util.stream.Stream of(java.lang.Object)>",
+             "<java.util.stream.Stream: java.util.stream.Stream$Builder builder()>",
+             "<java.util.stream.Stream: java.util.stream.Stream empty()>",
+             "<java.util.Optional: java.util.Optional of(java.lang.Object)>",
+             "<java.util.Optional: java.util.Optional ofNullable(java.lang.Object)>",
+             "<java.util.Optional: java.util.Optional empty()>"]
+  cont-cr:  [{sig: "<java.util.Collection: java.util.stream.Stream stream()>", index: -1},
+             {sig: "<java.util.Collection: java.util.stream.Stream parallelStream()>", index: -1},
+             {sig: "<java.util.Collections$UnmodifiableCollection: java.util.stream.Stream stream()>", index: -1},
+             {sig: "<java.util.Collections$UnmodifiableCollection: java.util.stream.Stream parallelStream()>", index: -1},
+             {sig: "<java.util.Collections$CopiesList: java.util.stream.Stream stream()>", index: -1},
+             {sig: "<java.util.Collections$CopiesList: java.util.stream.Stream parallelStream()>", index: -1},
+             {sig: "<java.util.Collections$SynchronizedCollection: java.util.stream.Stream stream()>", index: -1},
+             {sig: "<java.util.Collections$SynchronizedCollection: java.util.stream.Stream parallelStream()>", index: -1},
+             {sig: "<java.util.Collections$AsLIFOQueue: java.util.stream.Stream stream()>", index: -1},
+             {sig: "<java.util.Collections$AsLIFOQueue: java.util.stream.Stream parallelStream()>", index: -1},
+             {sig: "<java.util.Collections$CheckedCollection: java.util.stream.Stream stream()>", index: -1},
+             {sig: "<java.util.Collections$CheckedCollection: java.util.stream.Stream parallelStream()>", index: -1},
+             {sig: "<java.util.Collections$SetFromMap: java.util.stream.Stream stream()>", index: -1},
+             {sig: "<java.util.Collections$SetFromMap: java.util.stream.Stream parallelStream()>", index: -1},
+             {sig: "<java.util.Collections$UnmodifiableMap$UnmodifiableEntrySet: java.util.stream.Stream stream()>", index: -1},
+             {sig: "<java.util.Collections$UnmodifiableMap$UnmodifiableEntrySet: java.util.stream.Stream parallelStream()>", index: -1},
+             {sig: "<java.util.stream.StreamSupport: java.util.stream.Stream stream(java.util.Spliterator,boolean)>", index: 0}]
+  array-cr: [{sig: "<java.util.stream.Stream: java.util.stream.Stream of(java.lang.Object[])>", index: 0, unmodified: 1},
+             {sig: "<java.util.Arrays: java.util.stream.Stream stream(java.lang.Object[])>", index: 0, unmodified: 1},
+             {sig: "<java.util.Arrays: java.util.stream.Stream stream(java.lang.Object[]),int,int>", index: 0, unmodified: 1}]
+  entrance: [{sig: "<java.util.stream.Stream: java.util.stream.Stream of(java.lang.Object)>", source: 0, stream: -2},
+             {sig: "<java.util.Optional: java.util.Optional of(java.lang.Object)>", source: 0, stream: -2},
+             {sig: "<java.util.Optional: java.util.Optional ofNullable(java.lang.Object)>", source: 0, stream: -2},
+             {sig: "<java.util.Optional: java.lang.Object orElse(java.lang.Object)>", source: 0, stream: -1},
+             {sig: "<java.util.stream.Stream$Builder: java.util.stream.Stream$Builder add(java.lang.Object)>", source: 0, stream: -1},
+             {sig: "<java.util.stream.Streams$StreamBuilderImpl: java.util.stream.Stream$Builder add(java.lang.Object)>", source: 0, stream: -1},
+             {sig: "<java.util.stream.Stream$Builder: void accept(java.lang.Object)>", source: 0, stream: -1},
+             {sig: "<java.util.stream.Streams$StreamBuilderImpl: void accept(java.lang.Object)>", source: 0, stream: -1}]
+  process:  [# in java.util.stream.AbstractPipeline
+             "<java.util.stream.AbstractPipeline: java.util.stream.BaseStream sequential()>",
+             "<java.util.stream.AbstractPipeline: java.util.stream.BaseStream parallel()>",
+             "<java.util.stream.AbstractPipeline: java.util.stream.BaseStream onClose(java.lang.Runnable)>",
+             # in java.util.stream.ReferencePipeline
+             "<java.util.stream.ReferencePipeline: java.util.stream.Stream unordered()>",
+             "<java.util.stream.ReferencePipeline: java.util.stream.BaseStream unordered()>",
+             "<java.util.stream.ReferencePipeline: java.util.stream.Stream filter(java.util.function.Predicate)>",
+             "<java.util.stream.ReferencePipeline: java.util.stream.Stream distinct()>",
+             "<java.util.stream.ReferencePipeline: java.util.stream.Stream sorted()>",
+             "<java.util.stream.ReferencePipeline: java.util.stream.Stream sorted(java.util.Comparator)>",
+             "<java.util.stream.ReferencePipeline: java.util.stream.Stream limit(long)>",
+             "<java.util.stream.ReferencePipeline: java.util.stream.Stream skip(long)>",
+             "<java.util.stream.ReferencePipeline: java.util.stream.Stream peek(java.util.function.Consumer)>",
+             "<java.util.stream.ReferencePipeline: java.util.Optional findFirst()>",
+             "<java.util.stream.ReferencePipeline: java.util.Optional findAny()>",
+             "<java.util.stream.ReferencePipeline: java.util.Optional min(java.util.Comparator)>",
+             "<java.util.stream.ReferencePipeline: java.util.Optional max(java.util.Comparator)>",
+             "<java.util.stream.ReferencePipeline$Head: java.util.stream.BaseStream unordered()>",
+             "<java.util.stream.ReferencePipeline$StatefulOp: java.util.stream.BaseStream unordered()>",
+             "<java.util.stream.ReferencePipeline$StatelessOp: java.util.stream.BaseStream unordered()>",
+             # in java.util.Optional
+             "<java.util.Optional: java.util.Optional filter(java.util.function.Predicate)>",
+             # in java.util.Stream
+             "<java.util.stream.Stream$Builder: java.util.stream.Stream$Builder add(java.lang.Object)>",
+             "<java.util.stream.Streams$StreamBuilderImpl: java.util.stream.Stream$Builder add(java.lang.Object)>",
+             "<java.util.stream.Stream$Builder: java.util.stream.Stream build()>",
+             "<java.util.stream.Streams$StreamBuilderImpl: java.util.stream.Stream build()>"]
+  output:   [# in java.util.Optional
+             "<java.util.Optional: java.lang.Object get()>",
+             "<java.util.Optional: java.lang.Object orElse(java.lang.Object)>",
+             "<java.util.Optional: java.lang.Object orElseGet(java.util.function.Supplier)>",
+             "<java.util.Optional: java.lang.Object orElseThrow(java.util.function.Supplier)>"]
+  prim-cr:  [# primitiveStream.boxed() is handled by passing label generated at mapToObj(Integer::valueOf) out.
+             "<java.util.stream.IntPipeline: java.util.stream.Stream mapToObj(java.util.function.IntFunction)>",
+             "<java.util.stream.LongPipeline: java.util.stream.Stream mapToObj(java.util.function.LongFunction)>",
+             "<java.util.stream.DoublePipeline: java.util.stream.Stream mapToObj(java.util.function.DoubleFunction)>"]
+  map:      ["<java.util.stream.ReferencePipeline: java.util.stream.Stream map(java.util.function.Function)>",
+             "<java.util.Optional: java.util.Optional map(java.util.function.Function)>"]
+  flatMap:  ["<java.util.stream.ReferencePipeline: java.util.stream.Stream flatMap(java.util.function.Function)>",
+             "<java.util.Optional: java.util.Optional flatMap(java.util.function.Function)>"]
+  foreach:  ["<java.util.stream.ReferencePipeline$Head: void forEach(java.util.function.Consumer)>",
+             "<java.util.stream.ReferencePipeline$Head: void forEachOrdered(java.util.function.Consumer)>",
+             "<java.util.stream.ReferencePipeline: void forEach(java.util.function.Consumer)>",
+             "<java.util.stream.ReferencePipeline: void forEachOrdered(java.util.function.Consumer)>",
+             "<java.util.stream.ReferencePipeline: java.util.stream.Stream peek(java.util.function.Consumer)>",
+             "<java.util.Optional: void ifPresent(java.util.function.Consumer)>"]
+  # other one-by-one modeled functional operations are specified in class pascal.taie.analysis.pta.toolkit.cutshortcut.stream.StreamConfiger
