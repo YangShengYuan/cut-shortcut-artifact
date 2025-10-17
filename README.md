@@ -1,4 +1,6 @@
-# cut-shortcut-artifact
-the cut-shortcut (and cut-shortcut-S) source code and artifact
+# Cut-Shortcut-artifact
+the Cut-Shortcut (and Cut-Shortcut-S) source code and artifact. 
 
-the instructions for reproducing the experimental results in the article will be included in this document soon.
+The source folder contains all source code. Cut-Shortcut (and Cut-Shortcut-S) are implemneted as plugins into the Tai-e static analysis framework. You can locate the source code of Cut-Shortcut (and Cut-Shortcut-S) at [/source/src/](https://github.com/YangShengYuan/cut-shortcut-artifact/tree/main/source/src/main/java/pascal/taie/analysis/pta/toolkit/cutshortcut).
+
+The artifact folder provides pre-compiled jar of our implmentation to run experimentes. All benchmarks, files, and scripts necessary to reproduce the experimental results in our article are also included. A step by step instruction for reproducing those results will soon be included in this document.
